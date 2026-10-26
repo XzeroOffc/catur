@@ -1,0 +1,1 @@
+{"name":"rich-builder-chess-miniapp","version":"1.0.0","private":true,"type":"module","engines":{"node":">=22"},"scripts":{"build":"node build.js","test":"node --test test/*.test.js"},"dependencies":{"chess.js":"1.4.0"}}
