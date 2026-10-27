@@ -1,0 +1,6 @@
+.joystick{width:132px;height:132px;flex:0 0 132px;border-radius:50%;border:2px solid #91a284;background:radial-gradient(circle,#375345 0 32%,#203731 33% 65%,#405a4b 66%);display:grid;place-items:center;touch-action:none;user-select:none}
+.joystick-knob{display:block;width:58px;height:58px;border-radius:50%;background:#d8bd7c;border:3px solid #f4dfab;box-shadow:0 4px 0 #10231b;pointer-events:none}
+.controls{position:sticky;bottom:0;background:#132420;padding:12px 0;z-index:2;gap:16px}
+.dpad{display:none}
+@media(pointer:fine){.joystick{display:none}.dpad{display:grid}}
+@media(max-width:350px){.joystick{width:112px;height:112px;flex-basis:112px}}
