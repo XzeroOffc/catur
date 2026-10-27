@@ -1,7 +1,9 @@
 import {ITEMS,TYPES,distance,safe} from './rpg-world.js';
 import {createRenderer} from './rpg-render.js';
+import {storyTarget} from './rpg-story.js';
 const $=id=>document.getElementById(id),tg=window.Telegram?.WebApp,renderer=createRenderer($('world'));
 const controlsStyle=document.createElement('link');controlsStyle.rel='stylesheet';controlsStyle.href='/rpg-controls.css';document.head.append(controlsStyle);
+const storyBox=document.createElement('section'),storyTitle=document.createElement('h2'),storyText=document.createElement('p');storyBox.className='quest';storyBox.append(storyTitle,storyText);$('notice').before(storyBox);
 let state,busy=false,held=null,pending=null,lastAction=0;
 tg?.ready();tg?.expand();
 const say=(s,isError=false)=>{const e=$(isError?'error':'notice');e.textContent=s;if(isError)e.hidden=!s;if($('bag').open)$('bag-status').textContent=s;};
@@ -9,8 +11,12 @@ function paint(){
  document.querySelectorAll('[data-dir]').forEach(b=>{b.disabled=!state;});
  document.querySelectorAll('#attack,#interact,#potion,[data-craft],.equip').forEach(b=>{b.disabled=busy||!state;});$('refresh').disabled=busy;
  if(!state)return;const p=state.player;
+ const destination=storyTarget(state.story);
+ storyTitle.textContent=destination?`Bab ${(state.story?.stage||0)+1}: ${destination.title}`:'Pelita kembali menyala';
+ storyText.textContent=destination?destination.text:'Cerita selesai. Kamu tetap dapat menjelajah, mengumpulkan item, dan naik level.';
  const resource=state.nodes.find(n=>n.available&&distance(n,p)<=1);
  $('interact').querySelector?.('small')?.replaceChildren(document.createTextNode(distance(p,{x:5,y:5})<=2?'Istirahat: pulihkan HP':resource?resource.kind==='chest'?'Buka peti':`Ambil ${ITEMS[resource.kind]?.name||resource.kind}`:'Dekati sumber daya / api unggun'));
+ if(destination&&distance(p,destination)<=1)$('interact').querySelector?.('small')?.replaceChildren(document.createTextNode(`Interaksi: ${destination.label}`));
  $('level').textContent=p.level;$('hp-label').textContent=`${p.hp} / ${p.maxHp}`;$('hp').max=p.maxHp;$('hp').value=p.hp;$('xp-label').textContent=`${p.xp} / ${p.nextXp}`;$('xp').max=p.nextXp;$('xp').value=p.xp;$('gold').textContent=p.gold;$('area').textContent=p.area;$('coords').textContent=`${p.x}, ${p.y}`;$('potions').textContent=p.inventory.potion||0;
  const near=state.monsters.filter(m=>m.hp>0&&distance(m,p)<=2).sort((a,b)=>distance(a,p)-distance(b,p))[0];$('nearby').textContent=near?`${TYPES[near.kind].name} · ${near.hp}/${near.maxHp} HP`:safe(p.x,p.y)?'Zona aman':'Jelajahi sekitar';
  $('quest-state').textContent=p.questClaimed?'SELESAI':`${Number(p.kills>=5)+Number(p.gathered>=3)} / 2 tujuan`;$('quest-text').textContent=`Monster: ${Math.min(5,p.kills)}/5 · Sumber daya: ${Math.min(3,p.gathered)}/3`;
