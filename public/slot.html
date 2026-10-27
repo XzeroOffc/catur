@@ -1,12 +1,31 @@
 <!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Slot Gratis · Rich Builder</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/slot.css"><script src="https://telegram.org/js/telegram-web-app.js"></script><script type="module" src="/slot-app.js"></script></head>
-<body><main><header><div><span class="eyebrow">RICH BUILDER / GAMES</span><h1>Slot Gratis</h1></div><button id="close">Tutup</button></header>
-<p>Putaran gratis. Tanpa taruhan, deposit, atau penarikan uang.</p>
-<section aria-label="Saldo poin"><span class="label">POIN PERMAINAN</span><h2 id="balance">Memuat…</h2><progress id="progress" max="20000" value="0" aria-label="Progres menuju 20.000 poin"></progress><p>Target penukaran: <b>20.000 poin</b></p></section>
-<div class="reels" aria-hidden="true"><span>🍒</span><span>🍋</span><span>🍇</span></div>
-<p id="result" role="status" aria-live="polite">Menghubungkan akun Telegram…</p>
-<button id="spin" disabled>Putar gratis</button><p id="remaining"></p>
-<div class="actions"><button id="refresh">Muat ulang saldo</button><button id="redeem">Cara tukar poin</button></div>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#251717"><title>Slot Arcade · Rich Builder</title><link rel="stylesheet" href="/slot.css"><script src="https://telegram.org/js/telegram-web-app.js"></script><script type="module" src="/slot-app.js"></script></head>
+<body><main>
+<header class="toolbar"><span>RICH BUILDER <small>/ ARCADE</small></span><button id="close" class="text-button">Tutup</button></header>
+<section class="machine" aria-label="Mesin slot gratis">
+ <div class="marquee"><p>THREE REEL CLASSIC</p><h1>Slot <em>Arcade</em></h1><span class="marquee-foot">PUTAR GRATIS · KUMPULKAN POIN</span></div>
+ <div class="meter-bar"><div><span>Poin kamu</span><strong id="balance">···</strong></div><div class="meter-right"><span>Hadiah terakhir</span><strong id="last-prize">Belum ada</strong></div></div>
+ <div class="cabinet">
+  <div class="reel-surround">
+   <div class="reels" aria-hidden="true">
+    <div class="reel"><div class="reel-track" id="reel-0"></div></div>
+    <div class="reel"><div class="reel-track" id="reel-1"></div></div>
+    <div class="reel"><div class="reel-track" id="reel-2"></div></div>
+   </div>
+   <div class="payline" aria-hidden="true"><span>▶</span><i></i><span>◀</span></div>
+  </div>
+  <p class="payline-label">GARIS HASIL DI TENGAH</p>
+  <div class="result-window"><p id="result" role="status" aria-live="polite">Menghubungkan akun Telegram…</p></div>
+ </div>
+ <div class="console">
+  <div class="turn-meter"><span>PUTARAN HARI INI</span><strong id="remaining">··· / 20</strong><small id="reset-time">Reset pukul 00.00 WIT</small></div>
+  <button id="spin" disabled><span class="spin-mark" aria-hidden="true">↻</span><span id="spin-label">PUTAR</span><small>GRATIS</small></button>
+ </div>
+ <div class="machine-foot"><span>Tanpa taruhan</span><span>Setiap putaran menambah poin</span></div>
+</section>
 <p id="error" role="alert" hidden></p>
-<details><summary>Hadiah dan aturan</summary><ul><li>100 poin: peluang 50%</li><li>200 poin: peluang 30%</li><li>400 poin: peluang 15%</li><li>1.000 poin: peluang 5%</li></ul><p>Semua putaran mendapat poin. Tiga simbol menampilkan kategori hadiah yang dipilih server, bukan taruhan. Rata-rata 220 poin per putaran.</p><p>20 putaran per hari. Jeda 5 detik antarputaran. Jatah harian tersedia lagi pukul 00.00 WIT. Poin tidak kedaluwarsa.</p><p>Tukar melalui menu /slot di bot. Penukaran membuka jatah panel akunmu sendiri dan hanya tersedia jika jatah sudah terpakai serta tidak ada server aktif. Rata-rata sekitar 5 hari untuk target pertama jika memakai 20 putaran per hari. Hasil bisa berbeda.</p></details>
+<section class="redemption" aria-label="Progres penukaran"><div><strong>Reset jatah panel</strong><span id="progress-label">Target 20.000 poin</span></div><progress id="progress" max="20000" value="0" aria-label="Progres menuju 20.000 poin"></progress><button id="redeem">Cara tukar poin <span aria-hidden="true">↗</span></button></section>
+<nav class="utility" aria-label="Kontrol permainan"><button id="refresh">Muat ulang saldo</button><button id="motion" aria-pressed="true">Animasi: aktif</button></nav>
+<details><summary>Hadiah &amp; aturan permainan</summary><div class="rules"><p>Hasil di garis tengah berasal dari server. Simbol di atas dan bawah hanya bagian visual reel.</p><ul><li><span>🍒 Tiga ceri</span><b>100 poin · 50%</b></li><li><span>🍋 Tiga lemon</span><b>200 poin · 30%</b></li><li><span>🍇 Tiga anggur</span><b>400 poin · 15%</b></li><li><span>⭐ Tiga bintang</span><b>1.000 poin · 5%</b></li></ul><p>20 putaran gratis per hari, jeda 5 detik. Tidak ada deposit, taruhan atau penarikan uang. Poin tidak kedaluwarsa.</p><p>20.000 poin dapat ditukar melalui /slot di bot untuk reset jatah akun sendiri. Jatah harus sudah terpakai dan tidak boleh ada server aktif. Rata-rata hadiah 220 poin per putaran; target sekitar 5 hari dengan 20 putaran sehari, bukan jaminan.</p></div></details>
+<footer>RICH BUILDER · FREE PLAY</footer>
 </main></body></html>
