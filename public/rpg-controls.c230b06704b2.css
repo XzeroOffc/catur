@@ -1,0 +1,22 @@
+.joystick{width:132px;height:132px;flex:0 0 132px;border-radius:50%;border:2px solid #91a284;background:radial-gradient(circle,#375345 0 32%,#203731 33% 65%,#405a4b 66%);display:grid;place-items:center;touch-action:none;user-select:none}
+.joystick-knob{display:block;width:58px;height:58px;border-radius:50%;background:#d8bd7c;border:3px solid #f4dfab;box-shadow:0 4px 0 #10231b;pointer-events:none}
+.controls{position:sticky;bottom:0;background:#132420;padding:12px 0;z-index:2;gap:16px}
+.dpad{display:none}
+@media(pointer:fine){.joystick{display:none}.dpad{display:grid}}
+@media(max-width:350px){.joystick{width:112px;height:112px;flex-basis:112px}}
+.controls{touch-action:none;overscroll-behavior:contain}
+html,body{overscroll-behavior-y:none;background:#141b1c;color:#eee6d4}
+main{max-width:680px;padding-top:calc(10px + env(safe-area-inset-top) + var(--tg-content-safe-area-inset-top,0px));padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+header{margin-bottom:12px}h1{font-size:25px;color:#e6d5ad}.overline{color:#c0c6ba;font-size:8px}
+.stats{padding:10px;background:#222b2b;border:1px solid #62685a;border-radius:3px;gap:10px;margin-bottom:10px}
+.level{background:#354142;border-color:#a89a73;border-radius:4px;height:48px}.level b{font-size:24px}
+.viewport{border:1px solid #8b846b;border-radius:3px;box-shadow:0 6px 20px #0004}
+.area-bar,.position-bar{background:#242e2e}.area-bar span{color:#e8d9b6}
+canvas{image-rendering:auto}
+.bars progress{height:8px}#hp::-webkit-progress-value{background:#b77d6b}#hp::-moz-progress-bar{background:#b77d6b}
+.quest{margin-top:10px;border-radius:3px;background:#252e2c;border-color:#646c5d;padding:10px 12px}.quest h2{font-size:17px;color:#e6d5ad}.quest p{margin:6px 0;font-size:12px;color:#d6ddce}
+#notice{min-height:20px;font-size:12px;margin:8px 0}
+.tools{margin:10px 0}.tools button,button{border-radius:3px;background:#283432;border-color:#717967}
+.actions .primary{background:#a18a57;border-color:#c4b17f;color:#141e1b}.actions button{min-height:52px;font-family:Georgia,serif;font-size:16px}.actions button small{font-family:Arial,sans-serif;font-size:11px}
+dialog{background:#212d2b;border-radius:3px;border-color:#a39773}button:focus-visible{outline:3px solid #e2c78b}
+.controls{background:#182321;border-top:1px solid #626b58;padding-bottom:calc(10px + env(safe-area-inset-bottom));margin-top:10px}
