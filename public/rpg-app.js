@@ -1,11 +1,13 @@
 import {ITEMS,TYPES,distance,safe} from './rpg-world.js';
-import {createRenderer} from './rpg-render.js';
+import {createRenderer} from './rpg-iso.js';
 import {storyTarget} from './rpg-story.js';
+import {protectGameGestures} from './rpg-gestures.js';
 const $=id=>document.getElementById(id),tg=window.Telegram?.WebApp,renderer=createRenderer($('world'));
 const controlsStyle=document.createElement('link');controlsStyle.rel='stylesheet';controlsStyle.href='/rpg-controls.css';document.head.append(controlsStyle);
 const storyBox=document.createElement('section'),storyTitle=document.createElement('h2'),storyText=document.createElement('p');storyBox.className='quest';storyBox.append(storyTitle,storyText);$('notice').before(storyBox);
 let state,busy=false,held=null,pending=null,lastAction=0;
 tg?.ready();tg?.expand();
+protectGameGestures(tg,document.querySelector('.controls'));
 const say=(s,isError=false)=>{const e=$(isError?'error':'notice');e.textContent=s;if(isError)e.hidden=!s;if($('bag').open)$('bag-status').textContent=s;};
 function paint(){
  document.querySelectorAll('[data-dir]').forEach(b=>{b.disabled=!state;});
@@ -22,6 +24,7 @@ function paint(){
  $('quest-state').textContent=p.questClaimed?'SELESAI':`${Number(p.kills>=5)+Number(p.gathered>=3)} / 2 tujuan`;$('quest-text').textContent=`Monster: ${Math.min(5,p.kills)}/5 · Sumber daya: ${Math.min(3,p.gathered)}/3`;
  $('events').replaceChildren(...state.events.map(text=>{const li=document.createElement('li');li.textContent=text;return li;}));
  if($('map-dialog').open)renderer.minimap($('minimap'));
+ $('coords').textContent=`${p.x.toFixed(1)}, ${p.y.toFixed(1)}`;
 }
 function bag(){if(!state)return;const p=state.player;$('equipment').textContent=`ATK ${p.attack} · DEF ${p.defense} · ${p.equipment.weapon?ITEMS[p.equipment.weapon].name:'Pedang kayu'} · ${p.equipment.armor?ITEMS[p.equipment.armor].name:'Tanpa pelindung'}`;
  $('items').replaceChildren();for(const [id,count]of Object.entries(p.inventory)){if(!count)continue;const li=document.createElement('li'),label=document.createElement('span'),desc=document.createElement('small');label.textContent=`${ITEMS[id]?.name||id} × ${count}`;desc.textContent=ITEMS[id]?.description||'';label.append(desc);li.append(label);if(['sword','armor'].includes(id)){const b=document.createElement('button');b.textContent=Object.values(p.equipment).includes(id)?'Dipakai':'Pakai';b.className='equip';b.disabled=busy||Object.values(p.equipment).includes(id);b.onclick=()=>action('equip',{item:id});li.append(b);}$('items').append(li);}
@@ -30,6 +33,7 @@ async function request(op,extra={}){const controller=new AbortController(),timer
 function apply(next){state=next;renderer.update(next);paint();if($('bag').open)bag();}
 async function sync(manual=false){if(busy||!tg?.initData||document.hidden)return;busy=true;paint();try{const next=await request('state');apply(next);if(manual||!$('notice').textContent||$('notice').textContent.startsWith('Memuat'))say('Progres tersimpan. Jelajahi dunia dengan tombol arah.');say('',true);pending=null;}catch(e){say(e.message+' Tekan Sinkronkan untuk mencoba lagi.',true);held=null;}finally{busy=false;paint();if($('bag').open)bag();}}
 async function action(type,extra={}){
+ if(type==='move'&&typeof extra.direction==='object'){type='walk';extra={vector:extra.direction,seconds:.24};}
  if(busy||!state||!tg?.initData)return;
  if(pending){held=null;await sync(true);return;}
  if(Date.now()-lastAction<240)return;
@@ -48,7 +52,7 @@ const knob=document.createElement('span');knob.className='joystick-knob';stick.a
 document.querySelector('.dpad')?.before(stick);
 let pointer=null;
 function releaseStick(){pointer=null;held=null;knob.style.transform='translate(0,0)';}
-function steer(e){if(pointer!==e.pointerId)return;const box=stick.getBoundingClientRect(),x=e.clientX-box.left-box.width/2,y=e.clientY-box.top-box.height/2,r=Math.hypot(x,y),scale=Math.min(1,42/Math.max(1,r));knob.style.transform=`translate(${x*scale}px,${y*scale}px)`;held=r<12?null:Math.abs(x)>Math.abs(y)?(x>0?'right':'left'):(y>0?'down':'up');if(held)action('move',{direction:held});}
+function steer(e){if(pointer!==e.pointerId)return;if(e.cancelable)e.preventDefault();const box=stick.getBoundingClientRect(),x=e.clientX-box.left-box.width/2,y=e.clientY-box.top-box.height/2,r=Math.hypot(x,y),scale=Math.min(1,42/Math.max(1,r));knob.style.transform=`translate(${x*scale}px,${y*scale}px)`;const wx=x/2+y,wy=y-x/2,n=Math.hypot(wx,wy);held=r<12?null:{x:wx/n*Math.min(1,r/42),y:wy/n*Math.min(1,r/42)};if(held)action('move',{direction:held});}
 stick.onpointerdown=e=>{if(pointer!==null)return;e.preventDefault();pointer=e.pointerId;stick.setPointerCapture(e.pointerId);steer(e);};stick.onpointermove=steer;stick.onpointerup=stick.onpointercancel=stick.onlostpointercapture=releaseStick;
 window.addEventListener('blur',releaseStick);document.addEventListener('visibilitychange',releaseStick);
 document.addEventListener('keydown',e=>{if($('bag').open||$('map-dialog').open)return;const d=dirs[e.key];if(d){e.preventDefault();held=d;if(!e.repeat)action('move',{direction:d});}});document.addEventListener('keyup',()=>{held=null;});window.addEventListener('blur',()=>{held=null;});document.addEventListener('visibilitychange',()=>{held=null;});
