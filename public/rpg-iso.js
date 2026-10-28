@@ -37,10 +37,14 @@ export function createRenderer(canvas){
   else poly([[x-12,y],[x-5,y-12],[x+5,y-15],[x+13,y-3],[x+3,y+3]],'#99a6a4');
  }
  function monster(m,x,y,now,moving){
+  const previous=old[m.id]||m,dx=m.x-previous.x,dy=m.y-previous.y;
+  const screenDirection=(dx-dy)||((state.player.x-m.x)-(state.player.y-m.y));
+  c.save();c.translate(x,y);if(screenDirection<0)c.scale(-1,1);x=0;y=0;
   oval(x,y,12,4,'#15251e88');
   if(m.kind==='skeleton')person(x,y,now,moving,false,true);
   else if(m.kind==='wolf'){const step=moving&&!reduced?Math.sin(now/70)*4:0;line([[x-8,y-12],[x-10-step,y]],'#687b7d',3);line([[x+8,y-11],[x+10+step,y]],'#9ca7a3',3);oval(x,y-14,14,7,'#81938e');poly([[x+6,y-17],[x+9,y-29],[x+14,y-24],[x+18,y-29],[x+21,y-16],[x+15,y-10]],'#acb4a9');line([[x-12,y-16],[x-22,y-25]],'#718782',4);oval(x+17,y-20,1.4,1.4,'#d7bf8a');}
   else{oval(x,y-7,13,9,'#708f72');oval(x-3,y-11,7,6,'#a5b88e');oval(x-5,y-7,1.6,2,'#203b31');oval(x+5,y-7,1.6,2,'#203b31');}
+  c.restore();x=arguments[1];y=arguments[2];
   const h=m.kind==='skeleton'?49:35;c.fillStyle='#252c27';c.fillRect(x-14,y-h,28,3);c.fillStyle='#c58b74';c.fillRect(x-14,y-h,28*Math.max(0,m.hp/m.maxHp),3);
   if(m.id==='m11'&&state.story?.stage===3)label('Penjaga Segel',x,y-h-6);
  }
