@@ -10,6 +10,6 @@ const rewrite=text=>{for(const [name,replacement]of names)text=text.split(name).
 for(let i=0;i<files.length;i++)await writeFile('public/'+names.get(files[i]),rewrite(contents[i]));
 let html=await readFile('public/rpg.html','utf8');
 html=html.replace(/rpg-app\.[a-f0-9]{12}\.js/g,'rpg-app.js').replace(/rpg\.[a-f0-9]{12}\.css/g,'rpg.css');
-html=rewrite(html).replace('RICH BUILDER · RPG SOLO',`ISOMETRIC R2 · ${version}`);
+html=rewrite(html).replace(/RICH BUILDER · RPG SOLO|ISOMETRIC R[23] · [a-f0-9]{12}/g,`ISOMETRIC R3 · ${version}`);
 await writeFile('public/rpg.html',html);
-await writeFile('public/rpg-version.json',JSON.stringify({release:'ISOMETRIC R2',version,renderer:'rpg-iso',gestureGuard:true}));
+await writeFile('public/rpg-version.json',JSON.stringify({release:'ISOMETRIC R3',version,renderer:'rpg-iso',gestureGuard:true,continuousMovement:true}));
