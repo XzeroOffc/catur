@@ -1,15 +1,3 @@
-import {mkdir,copyFile,readFile,writeFile,readdir} from 'node:fs/promises';
-import {createHash} from 'node:crypto';
+import {mkdir,copyFile} from 'node:fs/promises';
 await mkdir('public/vendor',{recursive:true});
 await copyFile('node_modules/chess.js/dist/esm/chess.js','public/vendor/chess.js');
-const files=(await readdir('public')).filter(name=>/^rpg-[a-z-]+\.js$/.test(name)||['rpg.css','rpg-controls.css'].includes(name));
-const contents=await Promise.all(files.map(name=>readFile('public/'+name,'utf8')));
-const version=createHash('sha256').update(contents.join('\n')).digest('hex').slice(0,12);
-const names=new Map(files.map(name=>[name,name.replace(/\.(js|css)$/,`.${version}.$1`)]));
-const rewrite=text=>{for(const [name,replacement]of names)text=text.split(name).join(replacement);return text;};
-for(let i=0;i<files.length;i++)await writeFile('public/'+names.get(files[i]),rewrite(contents[i]));
-let html=await readFile('public/rpg.html','utf8');
-html=html.replace(/rpg-app\.[a-f0-9]{12}\.js/g,'rpg-app.js').replace(/rpg\.[a-f0-9]{12}\.css/g,'rpg.css');
-html=rewrite(html).replace(/RICH BUILDER · RPG SOLO|ISOMETRIC R[23] · [a-f0-9]{12}/g,`ISOMETRIC R3 · ${version}`);
-await writeFile('public/rpg.html',html);
-await writeFile('public/rpg-version.json',JSON.stringify({release:'ISOMETRIC R3',version,renderer:'rpg-iso',gestureGuard:true,continuousMovement:true}));
